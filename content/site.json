@@ -76,6 +76,7 @@
     { "platform": "twitter", "icon": "SiX", "label": "X", "color": "#111111" }
   ],
   "selectedPublicationIds": [
+    "pets-icml-2026-submission",
     "monovlm-cvpr-2026",
     "betaconform-neurips-2025",
     "uq-merge-acl-findings-2025",

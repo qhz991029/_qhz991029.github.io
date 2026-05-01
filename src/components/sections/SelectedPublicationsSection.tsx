@@ -8,6 +8,9 @@ import { selectedPublicationIds } from '@/site.config'
 import { useLocalizedData } from '@/hooks/useLocalizedData'
 import DynamicIcon from '../DynamicIcon'
 
+const selectedPublicationOrder = new Map(
+  Array.from(selectedPublicationIds).map((id, index) => [id, index])
+)
 
 const PublicationCard = ({ pub }: { pub: any }) => {
   const { t } = useTranslation()
@@ -118,7 +121,12 @@ const SelectedPublicationsSection: React.FC = () => {
   const { publications } = useLocalizedData()
 
   const selectedPubs = useMemo(
-    () => publications.filter((pub) => selectedPublicationIds.has(pub.id)).sort((a, b) => b.year - a.year),
+    () => publications
+      .filter((pub) => selectedPublicationIds.has(pub.id))
+      .sort((a, b) => (
+        (selectedPublicationOrder.get(a.id) ?? Number.MAX_SAFE_INTEGER)
+        - (selectedPublicationOrder.get(b.id) ?? Number.MAX_SAFE_INTEGER)
+      )),
     [publications]
   )
 

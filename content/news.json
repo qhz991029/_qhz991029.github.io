@@ -1,5 +1,20 @@
 [
   {
+    "type": "publication",
+    "badge": "ICML 2026",
+    "icon": "FaFileAlt",
+    "iconColor": "purple.400",
+    "title": "Three papers accepted to ICML 2026",
+    "description": "PETS, Bio-Foundation Models, and Modeling Attributional Style at Scale were accepted as ICML 2026 regular papers.",
+    "date": "2026",
+    "sortDate": "2026-05-01",
+    "links": [
+      { "text": "PETS arXiv", "url": "https://arxiv.org/abs/2602.16745", "icon": "FaFileAlt" },
+      { "text": "Bio-Foundation OpenReview", "url": "https://openreview.net/forum?id=kHPIJ7KVCw", "icon": "FaExternalLinkAlt" },
+      { "text": "Attribution OpenReview", "url": "https://openreview.net/forum?id=qgyEEb6wkh", "icon": "FaExternalLinkAlt" }
+    ]
+  },
+  {
     "type": "career",
     "badge": "Internship",
     "icon": "FaBriefcase",
