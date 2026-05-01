@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { Box, HStack, Text, Link, Flex, useColorMode, Collapse } from '@chakra-ui/react'
+import { Box, HStack, Text, Link, Flex, Grid, useColorMode, Collapse } from '@chakra-ui/react'
 import { keyframes } from '@emotion/react'
 import { useTranslation } from 'react-i18next'
 import DynamicIcon from '../DynamicIcon'
@@ -82,6 +82,13 @@ const COL_DATE = { base: "70px", sm: "100px", md: "120px" };
 const COL_TYPE = { base: "60px", sm: "80px", md: "100px" };
 const COL_ID = { base: "60px", sm: "70px", md: "80px" };
 const COL_CTRL = { base: "30px", sm: "40px", md: "50px" };
+
+const NEWS_ROW_TEMPLATE_COLUMNS = {
+  base: `${COL_DATE.base} ${COL_TYPE.base} minmax(0, 1fr) ${COL_CTRL.base}`,
+  sm: `${COL_DATE.sm} ${COL_TYPE.sm} minmax(0, 1fr) ${COL_CTRL.sm}`,
+  md: `${COL_DATE.md} ${COL_TYPE.md} minmax(0, 1fr) ${COL_CTRL.md}`,
+  lg: `${COL_DATE.md} ${COL_TYPE.md} ${COL_ID.md} minmax(0, 1fr) ${COL_CTRL.md}`,
+};
 
 const NewsTimeline: React.FC<NewsTimelineProps> = ({ news, showHeader: _showHeader = false }) => {
   const { colorMode } = useColorMode();
@@ -510,31 +517,33 @@ const NewsTimeline: React.FC<NewsTimelineProps> = ({ news, showHeader: _showHead
 
         {/* Table header — syntax highlighted */}
         <Box p={[0.5, 1, 2]}>
-          <Flex
+          <Grid
+            templateColumns={NEWS_ROW_TEMPLATE_COLUMNS}
             borderBottom={`1px solid ${termBorder}`}
             py={[0.5, 1]}
             fontSize={["3xs", "2xs", "xs"]}
             fontWeight="bold"
+            alignItems="center"
           >
-            <Text w={COL_DATE} color={termHighlight} isTruncated>
+            <Text color={termHighlight} isTruncated minW={0}>
               <Box as="span" display={{ base: "inline", sm: "none" }}>{t('newsTimeline.time')}</Box>
               <Box as="span" display={{ base: "none", sm: "inline" }}>{t('newsTimeline.timestamp')}</Box>
             </Text>
-            <Text w={COL_TYPE} color={termParam} isTruncated>
+            <Text color={termParam} isTruncated minW={0}>
               <Box as="span" display={{ base: "inline", sm: "none" }}>{t('newsTimeline.cat')}</Box>
               <Box as="span" display={{ base: "none", sm: "inline" }}>{t('newsTimeline.category')}</Box>
             </Text>
-            <Text w={COL_ID} color={termInfo} display={{ base: "none", lg: "block" }}>{t('newsTimeline.pid')}</Text>
-            <Text flex="1">
+            <Text color={termInfo} display={{ base: "none", lg: "block" }} isTruncated minW={0}>{t('newsTimeline.pid')}</Text>
+            <Text minW={0} overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
               <Box as="span" color={termSuccess}>MEMORY</Box>
               <Box as="span" color={termSecondary}>.</Box>
               <Box as="span" color={termCommand}>DUMP</Box>
             </Text>
-            <Text w={COL_CTRL} color={termPrompt} textAlign="center">
+            <Text color={termPrompt} textAlign="center" isTruncated minW={0}>
               <Box as="span" display={{ base: "inline", sm: "none" }}>+</Box>
               <Box as="span" display={{ base: "none", sm: "inline" }}>{t('newsTimeline.ctrl')}</Box>
             </Text>
-          </Flex>
+          </Grid>
 
           {/* Table rows */}
           {news.map((item, index) => (
@@ -545,20 +554,21 @@ const NewsTimeline: React.FC<NewsTimelineProps> = ({ news, showHeader: _showHead
               onMouseEnter={() => setHoveredItem(index)}
               onMouseLeave={() => setHoveredItem(null)}
             >
-              <Flex
+              <Grid
+                templateColumns={NEWS_ROW_TEMPLATE_COLUMNS}
                 py={[0.5, 1, 1.5]}
                 px={[0, 0.5]}
                 fontSize={["3xs", "2xs", "xs"]}
-                align="center"
+                alignItems="center"
                 cursor="pointer"
                 onClick={() => toggleExpanded(index)}
                 _hover={{ bg: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }}
                 bg={expandedItems[index] ? (isDark ? 'rgba(76,86,106,0.2)' : 'rgba(203,213,225,0.3)') : 'transparent'}
               >
-                <Text w={COL_DATE} color={termHighlight} fontWeight="medium" isTruncated>
+                <Text color={termHighlight} fontWeight="medium" isTruncated minW={0}>
                   {formatDate(item.date)}
                 </Text>
-                <Box w={COL_TYPE}>
+                <Box minW={0} overflow="hidden" style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                   <Flex
                     as="span"
                     align="center"
@@ -571,7 +581,9 @@ const NewsTimeline: React.FC<NewsTimelineProps> = ({ news, showHeader: _showHead
                     fontWeight="bold"
                     textTransform="uppercase"
                     display="inline-flex"
-                    w="fit-content"
+                    maxW="100%"
+                    overflow="hidden"
+                    whiteSpace="nowrap"
                   >
                     <Box display={{ base: "none", md: "inline-flex" }}>
                       <DynamicIcon
@@ -579,16 +591,16 @@ const NewsTimeline: React.FC<NewsTimelineProps> = ({ news, showHeader: _showHead
                         boxSize={[2, 2.5]}
                       />
                     </Box>
-                    <Box as="span" display={{ base: "inline", md: "none" }}>{item.type.substring(0, 3)}</Box>
-                    <Box as="span" display={{ base: "none", md: "inline" }}>{item.type}</Box>
+                    <Box as="span" display={{ base: "inline", md: "none" }} overflow="hidden" textOverflow="ellipsis">{item.type.substring(0, 3)}</Box>
+                    <Box as="span" display={{ base: "none", md: "inline" }} overflow="hidden" textOverflow="ellipsis">{item.type}</Box>
                   </Flex>
                 </Box>
-                <Text w={COL_ID} color={termInfo} fontFamily="mono" display={{ base: "none", lg: "block" }}>
+                <Text color={termInfo} fontFamily="mono" display={{ base: "none", lg: "block" }} isTruncated minW={0}>
                   <Box as="span" color={termSecondary}>0x</Box>
                   {(news.length - 1 - index).toString(16).padStart(4, '0')}
                 </Text>
-                <Box flex="1">
-                  <Flex align="center" gap={1}>
+                <Box minW={0} overflow="hidden" style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                  <Flex align="center" gap={1} minW={0} overflow="hidden" whiteSpace="nowrap">
                     {item.badge && (
                       <Text
                         fontSize={["4xs", "3xs"]}
@@ -598,11 +610,14 @@ const NewsTimeline: React.FC<NewsTimelineProps> = ({ news, showHeader: _showHead
                         color={typeColors[item.type.toLowerCase()]?.fg || typeColors.default.fg}
                         fontWeight="bold"
                         whiteSpace="nowrap"
+                        isTruncated
+                        maxW={{ base: "58px", sm: "100px", md: "140px" }}
+                        flexShrink={0}
                       >
                         {item.badge.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{200D}\u{20E3}]/gu, '').replace(' Accepted', '').replace('!', '').trim()}
                       </Text>
                     )}
-                    <Text fontWeight="medium" color={termText} isTruncated fontSize={["2xs", "xs"]}>
+                    <Text fontWeight="medium" color={termText} isTruncated fontSize={["2xs", "xs"]} minW={0}>
                       {item.title}
                     </Text>
                   </Flex>
@@ -612,7 +627,7 @@ const NewsTimeline: React.FC<NewsTimelineProps> = ({ news, showHeader: _showHead
                     </Text>
                   </Box>
                 </Box>
-                <Flex w={COL_CTRL} align="center" justify="center">
+                <Flex align="center" justify="center" minW={0}>
                   <Box
                     color={expandedItems[index] ? termInfo : termCommand}
                     fontWeight="bold"
@@ -626,7 +641,7 @@ const NewsTimeline: React.FC<NewsTimelineProps> = ({ news, showHeader: _showHead
                     {expandedItems[index] ? '[-]' : '[+]'}
                   </Box>
                 </Flex>
-              </Flex>
+              </Grid>
 
               {/* Expanded details */}
               <Collapse in={expandedItems[index]} animateOpacity>
