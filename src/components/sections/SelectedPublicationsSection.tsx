@@ -19,8 +19,6 @@ const PublicationCard = ({ pub }: { pub: any }) => {
   const { isOpen: isImageOpen, onOpen: onImageOpen, onClose: onImageClose } = useDisclosure()
   const borderColor = 'var(--border-color)'
   const authorVariants = new Set((siteOwner.name.authorVariants as string[]) ?? [])
-  const isAlphabeticallySortedCoFirst = pub.isCoFirst && pub.coFirstNote === 'sorted alphabetically'
-
 
   return (
     <Box p={[4, 5, 6]} bg="var(--card-bg)" borderRadius="md" border="1px solid" borderColor={borderColor} transition="all 0.2s" _hover={{ borderColor: 'cyan.400' }}>
@@ -50,23 +48,26 @@ const PublicationCard = ({ pub }: { pub: any }) => {
                   )}
           <VStack align="start" spacing={1.5} w="full">
             <Text fontSize="xs" color={'var(--secondary-text)'} lineHeight="base" noOfLines={2}>
-              {isAlphabeticallySortedCoFirst && (
-                <Text as="span" color="cyan.400" fontFamily="mono">(α-β) </Text>
-              )}
               {pub.authors.map((author: string, idx: number) => {
-                const isOwner = authorVariants.has(author.replace('*', ''))
-                const isCoFirst = pub.isCoFirst && pub.coFirstAuthors?.includes(author)
+                const cleanAuthor = author.replace('*', '')
+                const isOwner = authorVariants.has(cleanAuthor)
+                const isCoFirst = author.includes('*') || pub.coFirstAuthors?.includes(cleanAuthor)
                 return (
                   <Text
                     as="span"
                     key={idx}
                     fontWeight={isOwner ? 'bold' : 'normal'}
                   >
-                    {author}{isCoFirst && <Text as="sup" fontSize="2xs" color="cyan.400">∗</Text>}{idx < pub.authors.length - 1 && ', '}
+                    {cleanAuthor}{isCoFirst && <Text as="sup" fontSize="2xs" color="cyan.400">*</Text>}{idx < pub.authors.length - 1 && ', '}
                   </Text>
                 )
               })}
             </Text>
+            {pub.coFirstAuthors && pub.coFirstAuthors.length > 0 && (
+              <Text fontSize="2xs" color="cyan.400" fontFamily="mono">
+                (* co-first{pub.coFirstNote ? `, ${pub.coFirstNote}` : ''})
+              </Text>
+            )}
           </VStack>
           <Box w="full" h="1px" bg={'var(--divider-color)'} />
           <HStack spacing={1.5} flexWrap="wrap">
