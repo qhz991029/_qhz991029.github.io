@@ -78,8 +78,8 @@ const researchStatuses = [
 ];
 
 // Responsive column widths — CSS media queries, no JS evaluation needed
-const COL_DATE = { base: "70px", sm: "100px", md: "120px" };
-const COL_TYPE = { base: "60px", sm: "80px", md: "100px" };
+const COL_DATE = { base: "48px", sm: "100px", md: "120px" };
+const COL_TYPE = { base: "44px", sm: "80px", md: "100px" };
 const COL_ID = { base: "60px", sm: "70px", md: "80px" };
 const COL_CTRL = { base: "30px", sm: "40px", md: "50px" };
 
