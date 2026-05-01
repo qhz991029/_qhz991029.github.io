@@ -63,6 +63,11 @@ const PublicationCard = ({ pub }: { pub: any }) => {
                 )
               })}
             </Text>
+            {pub.isCoFirst && pub.coFirstNote && (
+              <Text fontSize="2xs" color="cyan.400" fontFamily="mono">
+                * Co-first authors, {pub.coFirstNote}
+              </Text>
+            )}
           </VStack>
           <Box w="full" h="1px" bg={'var(--divider-color)'} />
           <HStack spacing={1.5} flexWrap="wrap">
